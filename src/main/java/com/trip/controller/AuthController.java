@@ -6,6 +6,8 @@ import com.trip.service.AuthService;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -13,27 +15,52 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @CrossOrigin("*")
 public class AuthController {
-	@Autowired
-	AuthService authService;
 
-	@PostMapping("/register")
-	public AuthResponse register(@RequestBody AuthRequest req){
+    @Autowired
+    private AuthService authService;
 
-	    User user = authService.registerUser(req); // 🔥 get user
+    // 🔥 REGISTER
+    @PostMapping("/register")
+    public ResponseEntity<?> register(@RequestBody AuthRequest req) {
 
-	    String token = authService.generateToken(user.getEmail());
+        try {
+            User user = authService.registerUser(req);
 
-	    return new AuthResponse(token, user.getId()); // ✅ FIXED
-	}
+            if (user == null) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                        .body("Registration failed ❌");
+            }
 
-	@PostMapping("/login")
-	public AuthResponse login(@RequestBody AuthRequest req){
+            String token = authService.generateToken(user.getEmail());
 
-	    User user = authService.loginUser(req);
+            return ResponseEntity.ok(new AuthResponse(token, user.getId()));
 
-	    String token = authService.generateToken(user.getEmail());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Something went wrong ❌");
+        }
+    }
 
-	    return new AuthResponse(token, user.getId());  // ✅ correct
-	}
+    // 🔥 LOGIN
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody AuthRequest req) {
 
+        try {
+            User user = authService.loginUser(req);
+
+            // ❌ USER NOT FOUND
+            if (user == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body("User not found ❌");
+            }
+
+            String token = authService.generateToken(user.getEmail());
+
+            return ResponseEntity.ok(new AuthResponse(token, user.getId()));
+
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body("Invalid credentials ❌");
+        }
+    }
 }
