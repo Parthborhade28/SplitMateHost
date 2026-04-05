@@ -34,7 +34,7 @@ public class SecurityConfig {
             	    .requestMatchers("/payments/**").permitAll() // 🔥 ADD THIS
             	    .requestMatchers("/users/by-email").permitAll()
             	    .requestMatchers("/users/**").permitAll()
-            	    .anyRequest().authenticated()
+            	    .anyRequest().permitAll()
             	)
             .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
