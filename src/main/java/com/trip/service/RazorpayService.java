@@ -8,8 +8,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class RazorpayService {
 
-//    private final String KEY = "rzp_test_SUmxsFnz3cClM0";
-//    private final String SECRET = "AoAk6SayWReSbbFpYF0Akt6S";
+
 	@Value("${razorpay.key}")
 	private String KEY;
 
