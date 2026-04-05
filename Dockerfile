@@ -1,5 +1,5 @@
 # Use Java 17
-FROM openjdk:17-jdk-slim
+FROM eclipse-temurin:17-jdk
 
 # Set working directory
 WORKDIR /app
@@ -7,7 +7,7 @@ WORKDIR /app
 # Copy project
 COPY . .
 
-# Build app
+# Build project
 RUN ./mvnw clean package -DskipTests
 
 # Run app
