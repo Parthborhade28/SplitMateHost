@@ -13,45 +13,46 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class AuthService {
-	@Autowired
-	UserRepository userRepo;
-	@Autowired
-	PasswordEncoder encoder;
-	@Autowired
-	JwtUtil jwtUtil;
 
-	public User registerUser(AuthRequest req) {
+    @Autowired
+    private UserRepository userRepo;
 
-	    User user = new User();
-	    user.setName(req.getName());
-	    user.setEmail(req.getEmail());
-	    user.setPassword(encoder.encode(req.getPassword()));
-	    user.setUpiId(req.getUpiId());
+    @Autowired
+    private PasswordEncoder encoder;
 
-	    return userRepo.save(user); // return user
-	}
+    @Autowired
+    private JwtUtil jwtUtil;
 
-	public String login(AuthRequest req) {
-		User user = userRepo.findByEmail(req.getEmail()).orElseThrow(() -> new RuntimeException("User not found"));
+    // 🔥 REGISTER
+    public User registerUser(AuthRequest req) {
 
-		if (!encoder.matches(req.getPassword(), user.getPassword()))
-			throw new RuntimeException("Invalid password");
+        User user = new User();
+        user.setName(req.getName());
+        user.setEmail(req.getEmail());
+        user.setPassword(encoder.encode(req.getPassword()));
+        user.setUpiId(req.getUpiId());
 
-		return jwtUtil.generateToken(user.getEmail());
-	}
-	
-	public User loginUser(AuthRequest req) {
+        return userRepo.save(user);
+    }
 
-	    User user = userRepo.findByEmail(req.getEmail())
-	            .orElseThrow(() -> new RuntimeException("User not found"));
+    // 🔥 LOGIN USER (NO EXCEPTION)
+    public User loginUser(AuthRequest req) {
 
-	    if (!encoder.matches(req.getPassword(), user.getPassword())) {
-	        throw new RuntimeException("Invalid password");
-	    }
+        User user = userRepo.findByEmail(req.getEmail()).orElse(null);
 
-	    return user;
-	}
-	public String generateToken(String email) {
-	    return jwtUtil.generateToken(email);
-	}
+        if (user == null) {
+            return null; // 🔥 controller will handle 404
+        }
+
+        if (!encoder.matches(req.getPassword(), user.getPassword())) {
+            return null; // 🔥 controller will handle 401
+        }
+
+        return user;
+    }
+
+    // 🔥 TOKEN
+    public String generateToken(String email) {
+        return jwtUtil.generateToken(email);
+    }
 }
