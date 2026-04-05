@@ -15,7 +15,8 @@ public class CorsConfig {
 
                 registry.addMapping("/**")
                         .allowedOrigins(
-                                "https://splitmate-frontend-k22h.onrender.com"
+                                "https://splitmate-frontend-k22h.onrender.com",
+                                "http://localhost:5173"
                         )
                         .allowedMethods("*")
                         .allowedHeaders("*")
