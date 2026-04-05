@@ -17,7 +17,6 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequestMapping("/settle")
 @RequiredArgsConstructor
-@CrossOrigin("*")
 public class SettlementController {
 	@Autowired
 	SettlementService service;

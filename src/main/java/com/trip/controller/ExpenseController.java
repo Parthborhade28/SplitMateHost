@@ -23,7 +23,6 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequestMapping("/expenses")
 @RequiredArgsConstructor
-@CrossOrigin("*")
 public class ExpenseController {
 	@Autowired
 	ExpenseService expenseService;
