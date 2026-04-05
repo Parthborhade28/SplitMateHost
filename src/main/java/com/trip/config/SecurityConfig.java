@@ -21,27 +21,27 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
         http
-            .cors() // 🔥 FIXED HERE
+            .cors(cors -> {})
             .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers(org.springframework.http.HttpMethod.OPTIONS, "/**").permitAll()
+            	    .requestMatchers(org.springframework.http.HttpMethod.OPTIONS, "/**").permitAll()
 
-                // ✅ Public APIs
-                .requestMatchers("/auth/**").permitAll()
-                .requestMatchers("/expenses/**").permitAll()
-                .requestMatchers("/trips/**").permitAll()
-                .requestMatchers("/payments/**").permitAll()
-                .requestMatchers("/users/by-email").permitAll()
-                .requestMatchers("/users/**").permitAll()
-
-                .requestMatchers("/users/delete").authenticated()
-
-                .anyRequest().permitAll()
-            )
+            	    // ✅ Public APIs
+            	    .requestMatchers("/auth/**").permitAll()
+            	    .requestMatchers("/expenses/**").permitAll()
+            	    .requestMatchers("/trips/**").permitAll()
+            	    .requestMatchers("/users/delete").authenticated()
+            	    .requestMatchers("/payments/**").permitAll() // 🔥 ADD THIS
+            	    .requestMatchers("/users/by-email").permitAll()
+            	    .requestMatchers("/users/**").permitAll()
+            	    .anyRequest().permitAll()
+            	)
             .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
+    
+
 
     @Bean
     public PasswordEncoder passwordEncoder() {
