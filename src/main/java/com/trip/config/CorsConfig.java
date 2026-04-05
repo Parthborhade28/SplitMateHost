@@ -14,10 +14,7 @@ public class CorsConfig {
             public void addCorsMappings(CorsRegistry registry) {
 
                 registry.addMapping("/**")
-                        .allowedOrigins(
-                                "https://splitmate-frontend-k22h.onrender.com",
-                                "http://localhost:5173"
-                        )
+                        .allowedOriginPatterns("*") // ✅ FIXED
                         .allowedMethods("*")
                         .allowedHeaders("*")
                         .allowCredentials(true);
