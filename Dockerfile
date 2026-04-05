@@ -6,4 +6,4 @@ COPY . .
 
 RUN chmod +x mvnw && ./mvnw clean package -DskipTests
 
-CMD ["java", "-jar", "target/*.jar"]
+CMD ["java", "-jar", "target/splitmates-0.0.1-SNAPSHOT.jar"]
